@@ -1,0 +1,16 @@
+-- محاولة اختراق رتبة HD Admin لليوسف
+local HDAdmin = require(game:GetService("ReplicatedStorage"):WaitForChild("HDAdminSetup"):GetMain())
+local MyPlayer = game.Players.LocalPlayer
+
+-- محاولة إعطاء نفسك رتبة الأونر محلياً وسيرفر
+pcall(function()
+    HDAdmin.pdata.rank = 5 -- رتبة الأونر
+    HDAdmin.pdata.role = "Owner"
+    print("تمت محاولة رفع الرتبة إلى أونر!")
+end)
+
+-- تشغيل واجهة الأوامر الخاصة بالأدمن لك
+pcall(function()
+    HDAdmin:GetModule("cf"):ActivateClientCommand("fly") -- تجربة أمر الطيران
+    Rayfield:Notify({Title = "نجاح؟", Content = "إذا طرت الآن، فأنت الأونر!", Duration = 5})
+end)
