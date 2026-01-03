@@ -1,43 +1,97 @@
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-   Name = "KUWAITI HUB | شاليه محمد 💣",
+   Name = "KUWAITI HUB | تدمير شاليه محمد وليالي 💣",
+   LoadingTitle = "جاري تجهيز الثغرات...",
+   LoadingSubtitle = "بواسطة يوسف",
+   ConfigurationSaving = {
+      Enabled = false
+   },
    KeySystem = false
 })
 
-local Tab = Window:CreateTab("اختراق الرتبة 🛠️", 4483362458)
+-- تبويب التخريب الصوتي (ليالي حزينة)
+local AudioTab = Window:CreateTab("تخريب الصوت 🔊", 4483362458)
 
--- 1. ثغرة الحصول على العرض (التي اصطدتها أنت)
-Tab:CreateButton({
-   Name = "تفعيل عرض الرتبة (Rank Offer)",
-   Callback = function()
-       local args = {[1] = true}
-       game:GetService("ReplicatedStorage").HDAdminHDClient.Signals.RetrieveOfferStartTime:InvokeServer(unpack(args))
-       Rayfield:Notify({Title = "يوسف هب", Content = "تم إرسال طلب تفعيل العرض.. تحقق من الشات", Duration = 3})
+AudioTab:CreateInput({
+   Name = "ضع ID الأغنية هنا",
+   PlaceholderText = "مثال: 1445778235",
+   RemoveTextAfterFocusLost = false,
+   Callback = function(Text)
+       _G.SelectedSound = Text
    end,
 })
 
--- 2. تجميد السيرفر باستخدام نفس الريموت (Lagger)
-Tab:CreateToggle({
-   Name = "تعليق السيرفر (Lagger)",
+AudioTab:CreateToggle({
+   Name = "تشغيل الصوت المزعج (Loop)",
    CurrentValue = false,
    Callback = function(Value)
-       _G.Lag = Value
-       while _G.Lag do
-           -- سنستخدم نفس الريموت الذي وجدته لعمل ضغط على السيرفر
-           game:GetService("ReplicatedStorage").HDAdminHDClient.Signals.RetrieveOfferStartTime:InvokeServer(true)
-           task.wait() 
+       _G.LoudSpam = Value
+       while _G.LoudSpam do
+           pcall(function()
+               local args = {[1] = "Activate", [2] = Vector3.new(0, 0, 0)}
+               local remote = game:GetService("Players").LocalPlayer.Character.BoomBox.Remote
+               remote:FireServer(unpack(args))
+               remote:FireServer(_G.SelectedSound or "1445778235")
+           end)
+           task.wait(0.1)
        end
    end,
 })
 
--- 3. فتح صفحة الأونر (بناءً على ملف الـ Decompiled السابق)
-Tab:CreateButton({
-   Name = "محاولة فتح لوحة التحكم",
+-- تبويب الرتب والتبرع (شاليه محمد)
+local RankTab = Window:CreateTab("الرتب والتبرع 🏆", 4483362458)
+
+RankTab:CreateButton({
+   Name = "تزوير التبرع (Dono Spoofer)",
    Callback = function()
        pcall(function()
+           local args = {[1] = "999,999,999"}
+           workspace.DonoBoard.MainScript.UpdateplayerDonoStats:FireServer(unpack(args))
+           Rayfield:Notify({Title = "تم!", Content = "أصبحت التوب في التبرع", Duration = 3})
+       end)
+   end,
+})
+
+RankTab:CreateButton({
+   Name = "محاولة فتح لوحة الإدارة (Unlock HD)",
+   Callback = function()
+       pcall(function()
+           -- استغلال الريموت الذي اصطدته في HD Admin
+           local args = {[1] = true}
+           game:GetService("ReplicatedStorage").HDAdminHDClient.Signals.RetrieveOfferStartTime:InvokeServer(unpack(args))
+           
+           -- فتح الواجهة
            local hdMain = require(game:GetService("ReplicatedStorage"):WaitForChild("HDAdminSetup")):GetMain()
            hdMain:GetModule("Dashboard"):OpenPage("Moderation")
        end)
    end,
+})
+
+-- تبويب أوامر التخريب العامة
+local MiscTab = Window:CreateTab("أوامر عامة ⚙️", 4483362458)
+
+MiscTab:CreateButton({
+   Name = "فتح شريط الأوامر (;cmdbar)",
+   Callback = function()
+       game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(";cmdbar", "All")
+   end,
+})
+
+MiscTab:CreateButton({
+   Name = "حذف أثاث الماب (Local)",
+   Callback = function()
+       for _, v in pairs(game.Workspace:GetDescendants()) do
+           if v:IsA("BasePart") and not v:IsA("Terrain") then
+               v.CanCollide = false
+               v.Transparency = 1
+           end
+       end
+   end,
+})
+
+Rayfield:Notify({
+   Title = "تم الدمج بنجاح",
+   Content = "استخدم السكريبت بحذر لتنظيف الماب",
+   Duration = 5
 })
