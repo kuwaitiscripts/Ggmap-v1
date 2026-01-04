@@ -1,97 +1,114 @@
-local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+-- [[ KUWAITI HUB: SHALET MOHAMMED - PROFESSIONAL ]] --
 
+-- 1. الإنترو (مثل xHub)
+local function ShowIntro()
+    local IntroGui = Instance.new("ScreenGui", game.CoreGui)
+    local TextLabel = Instance.new("TextLabel", IntroGui)
+    TextLabel.Size = UDim2.new(1, 0, 1, 0)
+    TextLabel.BackgroundTransparency = 1
+    TextLabel.Text = "KUWAITI HUB"
+    TextLabel.TextColor3 = Color3.fromRGB(0, 255, 150)
+    TextLabel.TextSize = 55
+    TextLabel.Font = Enum.Font.LuckiestGuy
+    
+    task.wait(2.5)
+    for i = 0, 1, 0.1 do
+        TextLabel.TextTransparency = i
+        task.wait(0.05)
+    end
+    IntroGui:Destroy()
+end
+
+ShowIntro()
+
+-- 2. مكتبة الواجهة (Rayfield الموثوقة)
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 local Window = Rayfield:CreateWindow({
-   Name = "KUWAITI HUB | تدمير شاليه محمد وليالي 💣",
-   LoadingTitle = "جاري تجهيز الثغرات...",
-   LoadingSubtitle = "بواسطة يوسف",
-   ConfigurationSaving = {
-      Enabled = false
-   },
-   KeySystem = false
+   Name = "KUWAITI HUB | شاليه محمد",
+   LoadingTitle = "جاري تفعيل التهكير...",
+   ConfigurationSaving = {Enabled = false}
 })
 
--- تبويب التخريب الصوتي (ليالي حزينة)
-local AudioTab = Window:CreateTab("تخريب الصوت 🔊", 4483362458)
+-- 3. قائمة اختيار اللغة (اختياري، مدمج في التبويبات)
+local MainTab = Window:CreateTab("Main / الميزات", 4483362458)
 
-AudioTab:CreateInput({
-   Name = "ضع ID الأغنية هنا",
-   PlaceholderText = "مثال: 1445778235",
-   RemoveTextAfterFocusLost = false,
-   Callback = function(Text)
-       _G.SelectedSound = Text
+-- === [ الأوامر الـ 5 الظاهرة ] ===
+
+-- 1. السرعة
+MainTab:CreateSlider({
+   Name = "WalkSpeed / السرعة",
+   Range = {16, 500},
+   Increment = 1,
+   CurrentValue = 16,
+   Callback = function(Value)
+      game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = Value
    end,
 })
 
-AudioTab:CreateToggle({
-   Name = "تشغيل الصوت المزعج (Loop)",
+-- 2. القفز اللانهائي
+MainTab:CreateToggle({
+   Name = "Infinite Jump / قفز مستمر",
    CurrentValue = false,
    Callback = function(Value)
-       _G.LoudSpam = Value
-       while _G.LoudSpam do
-           pcall(function()
-               local args = {[1] = "Activate", [2] = Vector3.new(0, 0, 0)}
-               local remote = game:GetService("Players").LocalPlayer.Character.BoomBox.Remote
-               remote:FireServer(unpack(args))
-               remote:FireServer(_G.SelectedSound or "1445778235")
-           end)
-           task.wait(0.1)
-       end
+      _G.InfJump = Value
+      game:GetService("UserInputService").JumpRequest:Connect(function()
+          if _G.InfJump then
+              game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid"):ChangeState("Jumping")
+          end
+      end)
    end,
 })
 
--- تبويب الرتب والتبرع (شاليه محمد)
-local RankTab = Window:CreateTab("الرتب والتبرع 🏆", 4483362458)
-
-RankTab:CreateButton({
-   Name = "تزوير التبرع (Dono Spoofer)",
-   Callback = function()
-       pcall(function()
-           local args = {[1] = "999,999,999"}
-           workspace.DonoBoard.MainScript.UpdateplayerDonoStats:FireServer(unpack(args))
-           Rayfield:Notify({Title = "تم!", Content = "أصبحت التوب في التبرع", Duration = 3})
-       end)
-   end,
-})
-
-RankTab:CreateButton({
-   Name = "محاولة فتح لوحة الإدارة (Unlock HD)",
-   Callback = function()
-       pcall(function()
-           -- استغلال الريموت الذي اصطدته في HD Admin
-           local args = {[1] = true}
-           game:GetService("ReplicatedStorage").HDAdminHDClient.Signals.RetrieveOfferStartTime:InvokeServer(unpack(args))
-           
-           -- فتح الواجهة
-           local hdMain = require(game:GetService("ReplicatedStorage"):WaitForChild("HDAdminSetup")):GetMain()
-           hdMain:GetModule("Dashboard"):OpenPage("Moderation")
-       end)
-   end,
-})
-
--- تبويب أوامر التخريب العامة
-local MiscTab = Window:CreateTab("أوامر عامة ⚙️", 4483362458)
-
-MiscTab:CreateButton({
-   Name = "فتح شريط الأوامر (;cmdbar)",
-   Callback = function()
-       game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(";cmdbar", "All")
-   end,
-})
-
-MiscTab:CreateButton({
-   Name = "حذف أثاث الماب (Local)",
+-- 3. محاولة فتح الأبواب (Hack Doors)
+MainTab:CreateButton({
+   Name = "Unlock All Doors / فتح الأبواب",
    Callback = function()
        for _, v in pairs(game.Workspace:GetDescendants()) do
-           if v:IsA("BasePart") and not v:IsA("Terrain") then
+           if v.Name:find("Door") and v:IsA("BasePart") then
                v.CanCollide = false
-               v.Transparency = 1
+               v.Transparency = 0.5
            end
        end
    end,
 })
 
-Rayfield:Notify({
-   Title = "تم الدمج بنجاح",
-   Content = "استخدم السكريبت بحذر لتنظيف الماب",
-   Duration = 5
+-- 4. الانتقال للغرفة الرئيسية
+MainTab:CreateButton({
+   Name = "Teleport to VIP / انتقال للـ VIP",
+   Callback = function()
+       game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, 50, 0) -- عدل الإحداثيات حسب الغرفة
+   end,
 })
+
+-- 5. الحماية من الـ Admin (Anti-Freeze)
+MainTab:CreateToggle({
+   Name = "Anti-Admin / حماية من الإدارة",
+   CurrentValue = false,
+   Callback = function(Value)
+       _G.AntiAdmin = Value
+       task.spawn(function()
+           while _G.AntiAdmin do
+               local hum = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
+               if hum and (hum.PlatformStand or hum.Sit) then
+                   hum.PlatformStand = false
+                   hum.Sit = false
+               end
+               task.wait(0.1)
+           end
+       end)
+   end,
+})
+
+-- === [ التهكير الداخلي المخفي (The Bypasses) ] ===
+pcall(function()
+    -- منع اللعبة من إرسال تقارير (Anti-Log)
+    local old; old = hookmetamethod(game, "__namecall", function(self, ...)
+        local method = getnamecallmethod()
+        if method == "FireServer" and self.Name == "LogRemote" then 
+            return nil 
+        end
+        return old(self, ...)
+    end)
+end)
+
+Rayfield:Notify({Title = "KUWAITI", Content = "Script Loaded & Bypasses Active", Duration = 5})
